@@ -72,7 +72,7 @@ impl Converter for char {
                 if chars.len() != 1 {
                     return Err(StructMapError::new("invalid type: char"));
                 }
-                return Ok(chars[0]);
+                Ok(chars[0])
             }
             _ => Err(StructMapError::new("invalid type: char")),
         }
@@ -205,7 +205,7 @@ where
                         return Err(StructMapError::new("invalid type: HashMap<K, V>"));
                     }
                 }
-                return Ok(result);
+                Ok(result)
             }
             _ => Err(StructMapError::new("invalid type: HashMap<K, V>")),
         }

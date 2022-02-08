@@ -16,8 +16,4 @@ impl fmt::Display for StructMapError {
     }
 }
 
-impl Error for StructMapError {
-    // fn source(&self) -> Option<&(dyn Error + 'static)> {
-    //     Some(self.0)
-    // }
-}
+impl Error for StructMapError {}

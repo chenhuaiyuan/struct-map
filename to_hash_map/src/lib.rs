@@ -33,7 +33,7 @@ fn impl_map_macro(input: &syn::DeriveInput) -> Result<TokenStream, StructMapErro
         };
 
         return quote! {
-            result.insert(stringify!(#field_name).to_string(), structmap::Converter::to_field_value(&self.#field_name));
+            result.insert(stringify!(#field_name).to_string(), struct_map::Converter::to_field_value(&self.#field_name));
         };
     }).collect();
 
@@ -48,12 +48,12 @@ fn impl_map_macro(input: &syn::DeriveInput) -> Result<TokenStream, StructMapErro
             let mut #field_name: Option<#ty> = None;
             if let Some(value) = __optional_map__.get_mut(stringify!(#field_name)) {
                 if let Some(value) = std::mem::replace(value, None) {
-                    #field_name = Some(structmap::Converter::to_primitive(value)?);
+                    #field_name = Some(struct_map::Converter::to_primitive(value)?);
                 }else {
-                    return Err(structmap::StructMapError::new(format!("invalid type: {}", stringify!(#ty).to_owned())));
+                    return Err(struct_map::StructMapError::new(format!("invalid type: {}", stringify!(#ty).to_owned())));
                 }
             }
-            let #field_name = #field_name.ok_or(structmap::StructMapError::new(format!("invalid type: {}", stringify!(#ty).to_owned())))?;
+            let #field_name = #field_name.ok_or(struct_map::StructMapError::new(format!("invalid type: {}", stringify!(#ty).to_owned())))?;
         };
     }).collect();
 
@@ -76,14 +76,14 @@ fn impl_map_macro(input: &syn::DeriveInput) -> Result<TokenStream, StructMapErro
     let (impl_generics, ty_generics, where_clause) = input.generics.split_for_impl();
 
     Ok(quote! {
-        impl #impl_generics structmap::ToHashMap for #struct_name #ty_generics #where_clause {
-            fn to_map(&self) -> std::collections::HashMap<String, structmap::FieldValue> {
-                let mut result: std::collections::HashMap<String, structmap::FieldValue> = std::collections::HashMap::new();
+        impl #impl_generics struct_map::ToHashMap for #struct_name #ty_generics #where_clause {
+            fn to_map(&self) -> std::collections::HashMap<String, struct_map::FieldValue> {
+                let mut result: std::collections::HashMap<String, struct_map::FieldValue> = std::collections::HashMap::new();
                 #(#to_field_value_token_streams)*
                 result
             }
             
-            fn from_map(__map__: std::collections::HashMap<String, structmap::FieldValue>) -> std::result::Result<Self, structmap::StructMapError> {
+            fn from_map(__map__: std::collections::HashMap<String, struct_map::FieldValue>) -> std::result::Result<Self, struct_map::StructMapError> {
                 let mut __optional_map__ = std::collections::HashMap::with_capacity(__map__.len());
                 for (key, val) in __map__ {
                     __optional_map__.insert(key, Some(val));

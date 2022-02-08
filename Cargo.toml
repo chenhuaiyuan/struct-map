@@ -1,7 +1,10 @@
 [package]
-name = "structmap"
+name = "struct-map"
 version = "0.1.0"
 edition = "2021"
+authors = ["chy <343938938@qq.com>"]
+license = "MIT/Apache-2.0"
+description = "struct transform map or map transform struct"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
