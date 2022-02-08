@@ -9,4 +9,4 @@ description = "struct transform map or map transform struct"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-to_hash_map = {path = "./to_hash_map"}
+to_hash_map = 0.1
