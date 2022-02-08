@@ -7,6 +7,9 @@ license = "MIT/Apache-2.0"
 description = "struct transform map or map transform struct"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+exclude = [
+    "example"
+]
 
 [dependencies]
-to_hash_map = 0.1
+to_hash_map = "0.1"
