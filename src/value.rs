@@ -1,10 +1,11 @@
 use crate::error::StructMapError;
 use std::collections::HashMap;
-use std::fmt;
 use std::result::Result;
 use std::vec::Vec;
+pub use to_hash_map::*;
 
-pub trait FieldValue {
+#[derive(Debug, Clone)]
+pub enum FieldValue {
     Null,
     Bool(bool),
     Int(i64),
@@ -43,10 +44,6 @@ impl ToString for FieldValue {
     }
 }
 
-pub trait ToHashMap {
-    fn to_map(&self) -> HashMap<String, FieldValue>;
-    fn from_map(map: HashMap<String, FieldValue>) -> Result<Self, StructMapError>;
-}
 pub trait Converter: Sized {
     fn to_field_value(&self) -> FieldValue;
     fn to_primitive(fv: FieldValue) -> Result<Self, StructMapError>;
@@ -178,7 +175,7 @@ where
             FieldValue::Array(value) => value
                 .into_iter()
                 .map(|v| T::to_primitive(v))
-                .collect::<AlipayResult<Vec<T>>>(),
+                .collect::<Result<Vec<T>, StructMapError>>(),
             _ => Err(StructMapError::new("invalid type: Vec<T>")),
         }
     }
@@ -205,23 +202,26 @@ where
                     if let Ok(k) = K::try_from(k) {
                         result.insert(k, V::to_primitive(v)?);
                     } else {
-                        return Err(StructMapError::new(
-                            "invalid type: HashMap<K, V>",
-                        ));
+                        return Err(StructMapError::new("invalid type: HashMap<K, V>"));
                     }
                 }
                 return Ok(result);
             }
-            _ => Err(StructMapError::new(
-                "invalid type: HashMap<K, V>",
-            )),
+            _ => Err(StructMapError::new("invalid type: HashMap<K, V>")),
         }
     }
 }
 
+pub trait ToHashMap {
+    fn to_map(&self) -> HashMap<String, FieldValue>;
+    fn from_map(map: HashMap<String, FieldValue>) -> Result<Self, StructMapError>
+    where
+        Self: std::marker::Sized;
+}
+
 impl<T> Converter for T
 where
-    T: AlipayParam,
+    T: ToHashMap,
 {
     fn to_field_value(&self) -> FieldValue {
         FieldValue::Map(self.to_map())
