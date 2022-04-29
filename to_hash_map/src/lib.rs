@@ -16,14 +16,14 @@ pub fn derive_hash_map_param(item: TokenStream) -> TokenStream {
 fn impl_map_macro(input: &syn::DeriveInput) -> Result<TokenStream, StructMapError> {
     let data_struct = match &input.data {
         Data::Struct(data) => data,
-        Data::Enum(_) => Err(StructMapError::new("invalid type: Enum"))?,
-        Data::Union(_) => Err(StructMapError::new("invalid type: Union"))?,
+        Data::Enum(_) => return Err(StructMapError::new("invalid type: Enum")),
+        Data::Union(_) => return Err(StructMapError::new("invalid type: Union")),
     };
 
     let fields_named = match &data_struct.fields {
         Fields::Named(fields_named) => fields_named,
-        Fields::Unnamed(_) => Err(StructMapError::new("invalid type: Unnamed"))?,
-        Fields::Unit => Err(StructMapError::new("invalid type: Unit"))?,
+        Fields::Unnamed(_) => return Err(StructMapError::new("invalid type: Unnamed")),
+        Fields::Unit => return Err(StructMapError::new("invalid type: Unit")),
     };
 
     let to_field_value_token_streams: Vec<proc_macro2::TokenStream> = fields_named.named.iter().enumerate().map(|(i, field)| {

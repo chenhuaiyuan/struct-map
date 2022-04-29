@@ -6,7 +6,11 @@ authors = ["chy <343938938@qq.com>"]
 license = "MIT/Apache-2.0"
 description = "struct transform map or map transform struct"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lib]
+path = "core/lib.rs"
+
+[workspace]
+members = ["to_hash_map"]
 exclude = [
     "example"
 ]

@@ -12,6 +12,7 @@ description = "struct transform hash map or hash map transform struct"
 proc-macro = true
 
 [dependencies]
-syn = "1.0"
+syn = {version = "1.0", features = ["derive", "printing"]}
+# syn = "1.0"
 quote = "1.0"
 proc-macro2 = "1.0"
